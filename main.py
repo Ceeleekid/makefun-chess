@@ -64,11 +64,12 @@ def mm(b,mv):
  n=b[:];f,t,pr=mv;n[t]=pr or n[f];n[f]='.'
  if n[t]=='P'and b[t]=='.'and f%10!=t%10:n[t+10]='.'
  return n
-H={};NC=0
+H={};NC=0;NL=200000
 def qs(b,a,be,qd=0):
+ global NC;NC+=1
  s=ev(b)
  if s>=be:return be
- if s+900<a or qd>3:return a
+ if s+900<a or qd>4:return a
  if s>a:a=s
  for m in gm(b):
   if not('a'<=b[m[1]]<='z'):continue
@@ -80,8 +81,7 @@ def qs(b,a,be,qd=0):
  return a
 def sr(b,d,a,be):
  global NC;NC+=1
- if NC>50000:return ev(b)
- if d==0:return qs(b,a,be)
+ if d==0 or NC>NL:return qs(b,a,be) if d==0 else ev(b)
  k=''.join(b);e=H.get(k)
  ms=gm(b)
  ms.sort(key=lambda m:0 if m==e else(1 if'a'<=b[m[1]]<='z'else 2))
@@ -92,22 +92,31 @@ def sr(b,d,a,be):
   s=-sr(Z(n),d-1,-be,-a)
   if s>a:a=s;bm=m
   if a>=be:break
- H[k]=bm
+ if bm:H[k]=bm
  return a
-D=4
 while 1:
  g=J("/game",{})
  if g["status"]=="done":break
  while g["status"]=="your_move":
   b,w=pf(g["fen"])
   if not w:b=Z(b)
-  bm=g["legal_moves"][0];bs=-999999;NC=0;H.clear()
-  for mv in g["legal_moves"]:
+  lm=g["legal_moves"];bm=lm[0]
+  if len(lm)==1:
+   g=J("/move",{"game":g["game"],"move":bm});continue
+  rm=[]
+  for mv in lm:
    f=sq(mv[:2]);t=sq(mv[2:4]);pr=mv[4].upper()if len(mv)>4 else''
    if not w:f=119-f;t=119-t
-   n=mm(b,(f,t,pr))
-   s=-sr(Z(n),D-1,-999999,999999)
-   if s>bs:bs=s;bm=mv
+   rm.append((mv,f,t,pr))
+  for d in range(1,9):
+   NC=0;bs=-999999;cb=bm;ok=1
+   for mv,f,t,pr in rm:
+    n=mm(b,(f,t,pr))
+    s=-sr(Z(n),d-1,-999999,-bs)
+    if NC>NL:ok=0;break
+    if s>bs:bs=s;cb=mv
+   if ok:bm=cb;H.clear()
+   else:break
   g=J("/move",{"game":g["game"],"move":bm})
  print(f"game {g['game']}: {g['outcome']}",file=sys.stderr)
 print("done",file=sys.stderr)
