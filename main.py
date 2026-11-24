@@ -16,7 +16,7 @@ def pf(f):
  return b,p[1]=='w'
 Z=lambda b:[c.swapcase()if c.isalpha()else c for c in reversed(b)]
 def ev(b):
- s=0;wk=bk=0
+ s=0;wk=bk=wb=bb=0
  for i in range(21,99):
   c=b[i]
   if c<'A':continue
@@ -24,11 +24,24 @@ def ev(b):
   if u=='K':
    if c<'a':wk=i
    else:bk=i
+   continue
   elif u=='P':t=max(0,8-abs(2*f-7))*2+((7-r)*5 if c<'a'else r*5)
   elif u=='N':t=max(0,7-abs(2*r-7))*3+max(0,7-abs(2*f-7))*3
-  elif u=='B':t=max(0,7-abs(2*r-7))*2+max(0,7-abs(2*f-7))*2
-  elif u=='R'and((c<'a'and r==1)or(c>='a'and r==6)):t=15
+  elif u=='B':
+   t=max(0,7-abs(2*r-7))*2+max(0,7-abs(2*f-7))*2
+   if c<'a':wb+=1
+   else:bb+=1
+  elif u=='R':
+   col=f+1;op=0
+   for rr in range(2,10):
+    p=b[rr*10+col]
+    if p=='P'and c<'a':op=1;break
+    if p=='p'and c>='a':op=1;break
+   if not op:t=20
+   elif(c<'a'and r==1)or(c>='a'and r==6):t=15
   s+=v+t if c<'a'else-(v+t)
+ if wb>=2:s+=30
+ if bb>=2:s-=30
  if wk:
   for d in(-11,-10,-9):
    if b[wk+d]=='P':s+=15
