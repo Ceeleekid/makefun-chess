@@ -104,7 +104,7 @@ def qs(b,a,be,qd=0):
  if s+900<a or qd>4:return a
  if s>a:a=s
  for m in gm(b):
-  if not('a'<=b[m[1]]<='z'):continue
+  if not('a'<=b[m[1]]<='z')and not m[2]:continue
   n=mm(b,m)
   if b[m[1]]=='k':return 20000
   s=-qs(Z(n),-be,-a,qd+1)
@@ -117,7 +117,7 @@ def sr(b,d,a,be):
  if d==0 or NC>NL:return qs(b,a,be) if d==0 else ev(b)
  k=''.join(b);e=H.get(k)
  ms=gm(b)
- ms.sort(key=lambda m:0 if m==e else(1 if'a'<=b[m[1]]<='z'else 2))
+ ms.sort(key=lambda m:0 if m==e else(-V.get(b[m[1]].upper(),0)if'a'<=b[m[1]]<='z'else 999))
  bm=e
  for m in ms:
   n=mm(b,m)
