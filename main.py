@@ -64,38 +64,34 @@ def mm(b,mv):
  n=b[:];f,t,pr=mv;n[t]=pr or n[f];n[f]='.'
  if n[t]=='P'and b[t]=='.'and f%10!=t%10:n[t+10]='.'
  return n
-H={}
-def qs(b,a,be):
+H={};NC=0
+def qs(b,a,be,qd=0):
  s=ev(b)
  if s>=be:return be
- if s+1000<a:return a
+ if s+900<a or qd>3:return a
  if s>a:a=s
  for m in gm(b):
   if not('a'<=b[m[1]]<='z'):continue
   n=mm(b,m)
-  if'k'not in n:return 20000
-  s=-qs(Z(n),-be,-a)
+  if b[m[1]]=='k':return 20000
+  s=-qs(Z(n),-be,-a,qd+1)
   if s>a:a=s
   if a>=be:return a
  return a
 def sr(b,d,a,be):
+ global NC;NC+=1
+ if NC>50000:return ev(b)
  if d==0:return qs(b,a,be)
- if d>=3:
-  s=-sr(Z(b),d-3,-be,-be+1)
-  if s>=be:return be
  k=''.join(b);e=H.get(k)
  ms=gm(b)
  ms.sort(key=lambda m:0 if m==e else(1 if'a'<=b[m[1]]<='z'else 2))
- bm=e;c=0
+ bm=e
  for m in ms:
   n=mm(b,m)
-  if'k'not in n:H[k]=m;return 20000+d
-  rd=1 if(c>4 and d>=3 and not('a'<=b[m[1]]<='z'))else 0
-  s=-sr(Z(n),d-1-rd,-be,-a)
-  if rd and s>a:s=-sr(Z(n),d-1,-be,-a)
+  if b[m[1]]=='k':H[k]=m;return 20000+d
+  s=-sr(Z(n),d-1,-be,-a)
   if s>a:a=s;bm=m
   if a>=be:break
-  c+=1
  H[k]=bm
  return a
 D=4
@@ -105,12 +101,11 @@ while 1:
  while g["status"]=="your_move":
   b,w=pf(g["fen"])
   if not w:b=Z(b)
-  bm=g["legal_moves"][0];bs=-999999
+  bm=g["legal_moves"][0];bs=-999999;NC=0;H.clear()
   for mv in g["legal_moves"]:
    f=sq(mv[:2]);t=sq(mv[2:4]);pr=mv[4].upper()if len(mv)>4 else''
    if not w:f=119-f;t=119-t
    n=mm(b,(f,t,pr))
-   if'k'not in n:bm=mv;break
    s=-sr(Z(n),D-1,-999999,999999)
    if s>bs:bs=s;bm=mv
   g=J("/move",{"game":g["game"],"move":bm})
