@@ -48,7 +48,7 @@ def ev(b):
  if bk:
   for d in(9,10,11):
    if b[bk+d]=='p':s-=15
- return s+10
+ return s
 def gm(b):
  m=[]
  for i in range(21,99):
@@ -97,7 +97,7 @@ def ic(b):
    if b[t]in p:return 1
  return b[i-11]=='p'or b[i-9]=='p'
 KM=[0]*16
-H={};NC=0;NL=300000
+H={};NC=0;NL=250000
 def qs(b,a,be,qd=0):
  global NC;NC+=1
  s=ev(b)
@@ -119,13 +119,16 @@ def sr(b,d,a,be):
  k=''.join(b);e=H.get(k)
  ms=gm(b);km=KM[d%16]
  ms.sort(key=lambda m:0 if m==e else(-V.get(b[m[1]].upper(),0)if'a'<=b[m[1]]<='z'else(1 if m==km else 999)))
- bm=e
+ bm=e;fe=ev(b)if d<=2 else 0
  for m in ms:
+  if d<=2 and b[m[1]]<'a'and not m[2]and fe+200*d<=a:continue
   n=mm(b,m)
   if b[m[1]]=='k':H[k]=m;return 20000+d
   s=-sr(Z(n),d-1,-be,-a)
   if s>a:a=s;bm=m
-  if a>=be:KM[d%16]=m;break
+  if a>=be:
+   if b[m[1]]<'a':KM[d%16]=m
+   break
  if bm:H[k]=bm
  return a
 while 1:
