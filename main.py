@@ -145,6 +145,7 @@ while 1:
    f=sq(mv[:2]);t=sq(mv[2:4]);pr=mv[4].upper()if len(mv)>4 else''
    if not w:f=119-f;t=119-t
    rm.append((mv,f,t,pr))
+  H.clear()
   for d in range(1,9):
    NC=0;bs=-999999;cb=bm;ok=1
    for mv,f,t,pr in rm:
