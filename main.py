@@ -86,6 +86,16 @@ def mm(b,mv):
  n=b[:];f,t,pr=mv;n[t]=pr or n[f];n[f]='.'
  if n[t]=='P'and b[t]=='.'and f%10!=t%10:n[t+10]='.'
  return n
+def ic(b):
+ i=b.index('K')
+ for d in(-21,-19,-12,-8,8,12,19,21):
+  if b[i+d]=='n':return 1
+ for ds,p in(((-11,-9,9,11),'bq'),((-10,-1,1,10),'rq')):
+  for d in ds:
+   t=i+d
+   while b[t]=='.':t+=d
+   if b[t]in p:return 1
+ return b[i-11]=='p'or b[i-9]=='p'
 H={};NC=0;NL=250000
 def qs(b,a,be,qd=0):
  global NC;NC+=1
@@ -103,6 +113,7 @@ def qs(b,a,be,qd=0):
  return a
 def sr(b,d,a,be):
  global NC;NC+=1
+ if d==0 and ic(b):d=1
  if d==0 or NC>NL:return qs(b,a,be) if d==0 else ev(b)
  k=''.join(b);e=H.get(k)
  ms=gm(b)
@@ -130,7 +141,6 @@ while 1:
    f=sq(mv[:2]);t=sq(mv[2:4]);pr=mv[4].upper()if len(mv)>4 else''
    if not w:f=119-f;t=119-t
    rm.append((mv,f,t,pr))
-  H.clear()
   for d in range(1,9):
    NC=0;bs=-999999;cb=bm;ok=1
    for mv,f,t,pr in rm:
