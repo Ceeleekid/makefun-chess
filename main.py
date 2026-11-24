@@ -29,13 +29,12 @@ def ev(b):
   elif u=='B':t=max(0,7-abs(2*r-7))*2+max(0,7-abs(2*f-7))*2
   elif u=='R'and((c<'a'and r==1)or(c>='a'and r==6)):t=15
   s+=v+t if c<'a'else-(v+t)
- for k,sign in((wk,1),(bk,-1)):
-  if k==0:continue
-  sh=0
+ if wk:
   for d in(-11,-10,-9):
-   p=b[k+d]
-   if(p=='P'and sign==1)or(p=='p'and sign==-1):sh+=1
-  s+=sh*15*sign
+   if b[wk+d]=='P':s+=15
+ if bk:
+  for d in(9,10,11):
+   if b[bk+d]=='p':s-=15
  return s
 def gm(b):
  m=[]
