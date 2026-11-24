@@ -16,16 +16,26 @@ def pf(f):
  return b,p[1]=='w'
 Z=lambda b:[c.swapcase()if c.isalpha()else c for c in reversed(b)]
 def ev(b):
- s=0
+ s=0;wk=bk=0
  for i in range(21,99):
   c=b[i]
   if c<'A':continue
   r=i//10-2;f=i%10-1;u=c.upper();v=V.get(u,0);t=0
-  if u=='P':t=max(0,8-abs(2*f-7))*2+((7-r)*5 if c<'a'else r*5)
+  if u=='K':
+   if c<'a':wk=i
+   else:bk=i
+  elif u=='P':t=max(0,8-abs(2*f-7))*2+((7-r)*5 if c<'a'else r*5)
   elif u=='N':t=max(0,7-abs(2*r-7))*3+max(0,7-abs(2*f-7))*3
   elif u=='B':t=max(0,7-abs(2*r-7))*2+max(0,7-abs(2*f-7))*2
   elif u=='R'and((c<'a'and r==1)or(c>='a'and r==6)):t=15
   s+=v+t if c<'a'else-(v+t)
+ for k,sign in((wk,1),(bk,-1)):
+  if k==0:continue
+  sh=0
+  for d in(-11,-10,-9):
+   p=b[k+d]
+   if(p=='P'and sign==1)or(p=='p'and sign==-1):sh+=1
+  s+=sh*15*sign
  return s
 def gm(b):
  m=[]
@@ -64,7 +74,7 @@ def mm(b,mv):
  n=b[:];f,t,pr=mv;n[t]=pr or n[f];n[f]='.'
  if n[t]=='P'and b[t]=='.'and f%10!=t%10:n[t+10]='.'
  return n
-H={};NC=0;NL=200000
+H={};NC=0;NL=250000
 def qs(b,a,be,qd=0):
  global NC;NC+=1
  s=ev(b)
@@ -108,6 +118,7 @@ while 1:
    f=sq(mv[:2]);t=sq(mv[2:4]);pr=mv[4].upper()if len(mv)>4 else''
    if not w:f=119-f;t=119-t
    rm.append((mv,f,t,pr))
+  H.clear()
   for d in range(1,9):
    NC=0;bs=-999999;cb=bm;ok=1
    for mv,f,t,pr in rm:
@@ -115,7 +126,7 @@ while 1:
     s=-sr(Z(n),d-1,-999999,-bs)
     if NC>NL:ok=0;break
     if s>bs:bs=s;cb=mv
-   if ok:bm=cb;H.clear()
+   if ok:bm=cb
    else:break
   g=J("/move",{"game":g["game"],"move":bm})
  print(f"game {g['game']}: {g['outcome']}",file=sys.stderr)
